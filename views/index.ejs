@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="resources/css/style.css">
+  <title>Welcome</title>
+  <style>
+
+  </style>
+</head>
+
+<body class="text-center">
+  <div class="contenedor">
+    <% if (login) { %>
+      <h1>Usuario conectado: <strong>
+          <%= name %>
+        </strong></h1>
+      <div class="des-form">
+        <form>
+          <h1>Cifrado DES</h1>
+          <p for="original">Mensaje</p>
+          <input id="original" type="text">
+          <label> Hexadecimal
+            <input type="radio" id="opcionHexMensaje" name="opcionMensaje" value="Hex" checked>
+          </label>
+          <label> Texto
+            <input type="radio" id="opcionTextoMensaje" name="opcionMensaje" value="Texto">
+          </label>
+          <p for="llave">Llave</p>
+          <input id="llave" type="text">
+          <label> Hexadecimal
+            <input type="radio" id="opcionHexLlave" name="opcionLlave" value="Hex" checked>
+          </label>
+          <label> Texto
+            <input type="radio" id="opcionTextoLlave" name="opcionLlave" value="Texto">
+          </label>
+          <button id="botonCifrar" class="des-btn-cifrar" type="button">Cifrar</button>
+          <button id="botonDescifrar" class="des-btn-descifrar" type="button">Descifrar</button>
+          <hr>
+          <label id="labelResultado" for="encrypted">Mensaje cifrado</label>
+          <input id="encrypted" type="text" value="" readonly="">
+        </form>
+        <script type="module">
+          import { cifrar, descifrar, bin, asciiToHex, hexToAscii } from '../des.js';
+          let mensajeInput = document.querySelector("#original");
+          let llaveInput = document.querySelector("#llave");
+          let mensajeOutput = document.querySelector("#encrypted");
+          let botonCifrar = document.querySelector("#botonCifrar");
+          let botonDescifrar = document.querySelector("#botonDescifrar");
+          let mensaje = mensajeInput.value;
+
+          mensajeInput.addEventListener("input", characterEntered, false);
+          llaveInput.addEventListener("input", characterEntered, false);
+
+          botonCifrar.onclick = function () {
+            cifrarM();
+            document.getElementById('labelResultado').innerHTML = 'Mensaje cifrado';
+          };
+
+          botonDescifrar.onclick = function () {
+            descifrarC();
+            document.getElementById('labelResultado').innerHTML = 'Mensaje descifrado';
+          };
+
+          function characterEntered(e) {
+            mensaje = e.target.value;
+            mensaje = mensaje.toUpperCase();
+            mensaje = mensaje.replace(/[^A-Z0-9]/, '');
+
+            e.target.value = mensaje;
+          }
+
+          function cifrarM() {
+            let llave = llaveInput.value;
+            let mensaje = mensajeInput.value;
+            let encryptedMessage;
+
+
+            if (document.querySelector('input[name="opcionMensaje"]:checked').value === "Texto") {
+              mensaje = asciiToHex(mensaje);
+            }
+
+            if (document.querySelector('input[name="opcionLlave"]:checked').value === "Texto") {
+              llave = asciiToHex(llave);
+            }
+
+            encryptedMessage = cifrar(bin(mensaje), bin(llave));
+            mensajeOutput.value = encryptedMessage;
+
+          }
+
+          function descifrarC() {
+            let llave = llaveInput.value;
+            let mensaje = mensajeInput.value;
+            let encryptedMessage;
+
+            if (document.querySelector('input[name="opcionMensaje"]:checked').value === "Texto") {
+              mensaje = hexToAscii(mensaje);
+            }
+
+            if (document.querySelector('input[name="opcionLlave"]:checked').value === "Texto") {
+              llave = hexToAscii(llave);
+            }
+
+            try {
+              encryptedMessage = descifrar(bin(mensaje), bin(llave));
+              mensajeOutput.value = encryptedMessage;
+            } catch (TypeError) {
+              alert("Error: Introduzca una llave en el campo 'Llave'");
+
+            }
+          }
+        </script>
+
+        <%} else { %>
+          <h1><strong>
+              <%= name %>
+            </strong></h1>
+          <a href="login" class="a-login">Ir a Login</a>
+          <% } %>
+      </div>
+</body>
+
+</html>
