@@ -15,7 +15,7 @@
 <body class="text-center">
   <div class="contenedor">
     <% if (login) { %>
-      <h1>Usuario conectado: <strong>
+      <h1 class="usuario">Usuario conectado: <strong>
           <%= name %>
         </strong></h1>
       <div class="des-form">
@@ -44,7 +44,8 @@
           <input id="encrypted" type="text" value="" readonly="">
         </form>
         <script type="module">
-          import { cifrar, descifrar, bin, asciiToHex, hexToAscii } from '../des.js';
+          //const des = require('../des.js');
+          import * as des from '../des.js';
           let mensajeInput = document.querySelector("#original");
           let llaveInput = document.querySelector("#llave");
           let mensajeOutput = document.querySelector("#encrypted");
@@ -80,14 +81,14 @@
 
 
             if (document.querySelector('input[name="opcionMensaje"]:checked').value === "Texto") {
-              mensaje = asciiToHex(mensaje);
+              mensaje = des.asciiToHex(mensaje);
             }
 
             if (document.querySelector('input[name="opcionLlave"]:checked').value === "Texto") {
-              llave = asciiToHex(llave);
+              llave = des.asciiToHex(llave);
             }
 
-            encryptedMessage = cifrar(bin(mensaje), bin(llave));
+            encryptedMessage = des.cifrar(des.bin(mensaje), des.bin(llave));
             mensajeOutput.value = encryptedMessage;
 
           }
@@ -98,15 +99,15 @@
             let encryptedMessage;
 
             if (document.querySelector('input[name="opcionMensaje"]:checked').value === "Texto") {
-              mensaje = hexToAscii(mensaje);
+              mensaje = des.hexToAscii(mensaje);
             }
 
             if (document.querySelector('input[name="opcionLlave"]:checked').value === "Texto") {
-              llave = hexToAscii(llave);
+              llave = des.hexToAscii(llave);
             }
 
             try {
-              encryptedMessage = descifrar(bin(mensaje), bin(llave));
+              encryptedMessage = des.descifrar(des.bin(mensaje), des.bin(llave));
               mensajeOutput.value = encryptedMessage;
             } catch (TypeError) {
               alert("Error: Introduzca una llave en el campo 'Llave'");

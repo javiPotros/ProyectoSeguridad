@@ -122,7 +122,7 @@ app.get('/logout', function (req, res) {
 });
 
 
-
+/*
 // DES 
 app.get('/encriptar', function (req, res) {
 	console.log("Hello There");
@@ -134,7 +134,7 @@ app.get('/encriptar', function (req, res) {
 
 	console.log(enc);
 	console.log(des.decode(des.bin(enc), key));
-});
+});*/
 
 app.listen(3000, (req, res) => {
 	console.log('SERVER RUNNING IN http://localhost:3000');

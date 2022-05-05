@@ -346,3 +346,11 @@ form {
   border: 0;
   margin-bottom: -5px;
 }
+
+.contenedor .usuario {
+  margin-bottom: -10px;
+}
+
+.des-form h1 {
+  margin-top: -10px;
+}
